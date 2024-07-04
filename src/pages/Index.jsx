@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from 'next/image';
+
 import heroImage from '../../public/images/hero-image.jpg';
 
 const Index = () => {
@@ -14,7 +14,7 @@ const Index = () => {
         </CardContent>
       </Card>
       <section className="w-full mt-8">
-        <Image src={heroImage} alt="Hero Image" layout="responsive" objectFit="cover" />
+        <img src={heroImage} alt="Hero Image" className="w-full h-auto object-cover" />
       </section>
     </div>
   );
