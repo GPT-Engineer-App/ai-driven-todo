@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,17 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { CircleUser, Menu, Home, Wallet, QrCode, History, HelpCircle, Bell, Layers, ChevronDown, Sun, Moon } from "lucide-react";
-import { NavLink, Outlet, Link } from "react-router-dom";
+import { CircleUser, Menu, Bell, Sun, Moon } from "lucide-react";
+import { NavLink, Outlet } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
+import { navItems } from "../App";
 
 const Layout = () => {
   const { theme, setTheme } = useTheme();
@@ -47,12 +41,86 @@ const Layout = () => {
         <main className="flex-grow p-4 overflow-auto">
           <Outlet />
         </main>
-        <MobileFooter />
       </div>
     </div>
   );
 };
 
-// ... (rest of the code remains unchanged)
+const Sidebar = () => (
+  <div className="hidden border-r bg-muted md:block">
+    <div className="flex h-full max-h-screen flex-col gap-2">
+      <div className="flex h-[60px] items-center border-b px-6">
+        <NavLink to="/" className="flex items-center gap-2 font-semibold">
+          <img src="/images/logo.png" alt="PlataPay Logo" className="h-6 w-6" />
+          <span>PlataPay</span>
+        </NavLink>
+      </div>
+      <div className="flex-1 overflow-auto py-2">
+        <nav className="grid items-start px-4 text-sm font-medium">
+          {navItems.map((item, index) => (
+            <NavItem key={index} to={item.to} icon={item.icon}>
+              {item.title}
+            </NavItem>
+          ))}
+        </nav>
+      </div>
+    </div>
+  </div>
+);
+
+const MobileSidebar = () => (
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+        <Menu className="h-5 w-5" />
+        <span className="sr-only">Toggle navigation menu</span>
+      </Button>
+    </SheetTrigger>
+    <SheetContent side="left">
+      <nav className="grid gap-6 text-lg font-medium">
+        {navItems.map((item, index) => (
+          <NavItem key={index} to={item.to} icon={item.icon}>
+            {item.title}
+          </NavItem>
+        ))}
+      </nav>
+    </SheetContent>
+  </Sheet>
+);
+
+const NavItem = ({ to, icon, children }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      cn(
+        "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-accent-foreground",
+        isActive ? "text-accent-foreground" : "text-muted-foreground"
+      )
+    }
+  >
+    {icon}
+    <span>{children}</span>
+  </NavLink>
+);
+
+const UserDropdown = () => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="secondary" size="icon" className="rounded-full">
+        <CircleUser className="h-5 w-5" />
+        <span className="sr-only">Toggle user menu</span>
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>Profile</DropdownMenuItem>
+      <DropdownMenuItem>Settings</DropdownMenuItem>
+      <DropdownMenuItem>Support</DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>Logout</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
 
 export default Layout;
